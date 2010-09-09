@@ -1,0 +1,156 @@
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+README
+
+RPC - Exemplos para a disciplina de sod
+Prof. Luiz Gustavo Leão Fernandes
+gustavo@inf.pucrs.br
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Changelog:
+
+Pedro Velho   - 09/06/2005 - Adicionado arquivo README
+Pedro Velho   - 09/06/2005 - Adicionado arquivo Makefile
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+NOTA: Este arquivo nao possui acentos para evitar 
+possiveis problemas com mapas de caracteres.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+ADDIT - Procedimento remoto que recebe dois numeros e 
+retorna seu resultado.
+
+
+
+Sumario
+
+1- Descricao da aplicacao
+2- Compilando usando Makefile
+3- Compilando sem usar Makefile
+4- Executando 
+
+
+
+
+1- Descricao da aplicacao
+
+   Esse diretorio contem os arquivos fontes necessarios
+para a execucao do programa ADDIT. Esse programa 
+implementa um servidor que efetua uma operacao de soma
+a medida que um cliente requisita essa operacao.
+
+
+
+
+
+
+
+2- Compilando usando Makefile
+
+   Para compilar a aplicacao com o makefile basta
+digitar:
+
+   $ make
+
+   
+
+
+
+
+
+3- Compilando sem usar Makefile
+
+   Primeiro os stubs do servidor e do cliente deverao
+ser criados. Isso e feito utilizando a seguinte linha
+de comando no Linux:
+
+   $ rpcgen addit.x
+
+   Confira se a execucao nao teve problemas utilizando
+o comando ls para verificar se os arquivos de stub 
+foram criados como o exemplo abaixo:
+
+	 
+   $ ls -1
+   ...
+   addit.h
+   addit_clnt.c
+   addit_svc.c
+   addit_xdr.c
+   ...
+
+   
+   Agora voce precisa gerar codigo objeto para os stubs.
+O codigo objeto dos stubs gerados deverao ser linkados
+posteriormente com os arquivos que implementam o client
+e o servidor (add_clnt.c e add_svc.c). Para gerar codigo
+objeto sem linkar utilize o compilador gcc com a opcao
+-c como abaixo:
+
+  $ gcc -c addit_clnt.c
+  $ gcc -c addit_svc.c
+  $ gcc -c addit_xdr.c
+
+  Apos a execucao do comando acima uma serie de arquivos
+objetos (extensao .o) deverao ser criados. Para conferir
+se os arquivos foram gerandos corretamente utilize o
+comando ls como segue:
+
+  $ ls -1 *.o
+  addit_clnt.o
+  addit_svc.o
+  addit_xdr.o
+
+  Finalmente voce podera compilar os arquivos que imple-
+mentam a aplicacao. Note que existem duas aplicacoes a
+primeira contem o codigo fonte do processo servidor, que
+implementa o procedimento remoto add_svc.c. O segundo
+contem o codigo fonte do processo client, que acessa
+o procedimento remoto add_clnt.c. Para gerar os binarios
+do client e do servidor utilize respectivamente:
+
+  $ gcc add_clnt.c addit_clnt.o addit_xdr.o -o client
+
+  $ gcc add_svc.c addit_svc.o addit_xdr.o  -o server
+
+
+4- Executando 
+
+  Os arquivos client e server seram gerados. Antes de
+executar as aplicacoes certifique-se de que os arquivos
+possuem permissao de escrita com o comando:
+
+  $ chmod +x server
+
+  $ chmod +x client
+
+  Para executar essa aplicacao voce precisara de no
+minimo dois terminais (shels). Primeiro execute
+o programa servidor em um dos terminais:
+
+  $ ./server
+
+  Atencao: o programa servidor nao imprime nenhuma 
+mensagem.
+
+  Para executar o programa client esperimente:
+
+  $ ./client
+
+  Uma mensagem de erro sera impressa pois esse 
+programa necessita de tres parametros. O primeiro
+parametro eh o endereco ip da maquina executando
+o server. A notacao para o endereco IP pode ser 
+tanto a notacao tradicional de  pontos (ex.: 10.13.30.12, 
+127.0.0.1) como a notacao de nome (ex.: localhost).
+Ainda serao necessarios mais dois parametros esses
+devem ser dois numeros inteiros. Experimente:
+
+  $ ./client localhost 2 3
+
+
+  Atencao: O comando acima so funcionara se o
+server estiver rodando na mesma maquina que o
+processo client.
