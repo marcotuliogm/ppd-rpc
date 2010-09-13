@@ -10,15 +10,17 @@ int *add_args_1_svc(record *rec, struct svc_req *clnt) {
     static int result;
 
     result = rec->first_num + rec->second_num;
+	printf("Teste %d %d \n\r", rec->first_num, rec->second_num);
 
     return ((int *) &result);
 }
 
-int *autentication_2_svc(account *user_account, struct svc_req *clnt){
+int *authentication_2_svc(account *user_account, struct svc_req *clnt){
+	static int result;
 	char line[80];
-	sprintf(line, "%s%s", user_account->user, user_account->password);
+	sprintf(line, "user %s password %s", user_account->user, user_account->password);
 	printf("%s\n\r", line);
-
-	return ((int *) 0);
+	result = 0;
+	return ((int *) &result);
 }
 

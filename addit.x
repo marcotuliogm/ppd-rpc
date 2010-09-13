@@ -12,12 +12,11 @@ struct account {
 	char password[30];
 };
 
-
 program ADDITPROG {                /* value to register the program */
     version ADDITVERS {            /* version must be assigned a value */
         int ADD_ARGS(record) = 1;  /* this is the service function */
-    } =1;                          /* version value */
+    } = 1;                          /* version value */
 	version ACCOUNT_MANAGER {			/* Service for authentications*/
-		int AUTENTICATION(account) = 1;
-	} =2;
+		int AUTHENTICATION(account) = 1;
+	} = 2;
 } = 0x20000003;                    /* program value */   
