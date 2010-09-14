@@ -7,13 +7,16 @@
 
 #define SERVER "127.0.0.1"
 
+
 enum ERROR{
 	ERR_NOT_CONNECTED = -1,
-	ERR_NOT_AUTHENTICATED,
+	ERR_NOT_AUTHENTICATED = -2,
 };
+
 
 int auth(){
 	int answer;
+	int retry = 3;
     CLIENT *cl_auth;
 	account *user_account = (account *) malloc(sizeof(account));
 	
@@ -22,19 +25,25 @@ int auth(){
         clnt_pcreateerror(SERVER); 
         return ERR_NOT_CONNECTED; 
     }
-	printf("Login:\n\r");
-	printf("User: ");
-	scanf("%s", user_account->user);
-	printf("Password: ");
-	scanf("%s", user_account->password);
-
-	answer = *authentication_2(user_account,cl_auth);
-	printf("answer %d\n\r", answer);
-    if (answer < 0) { 
-        printf("User or passworrd wrong: try again\n\r"); 
-        return ERR_NOT_AUTHENTICATED; 
-    } 
-
+	do {
+		printf("------------------------------ USER LOGIN ------------------------------\n\r");
+		printf("User: ");
+		scanf("%s", user_account->user);
+		printf("Password: ");
+		scanf("%s", user_account->password);
+	
+		answer = *authentication_2(user_account,cl_auth);
+		printf("answer %d\n\r", answer);
+	    if (answer < 0) { 
+	        printf("User or password wrong: try again\n\r");
+			retry--;
+	    }
+	} while ((retry > 0) & (answer != 0));
+	if (retry == 0){
+		clnt_destroy(cl_auth);
+        printf("Number of retries exceeded\n\r");
+		return ERR_NOT_AUTHENTICATED;
+	}
 	clnt_destroy(cl_auth);
 	return 0;
 }
@@ -44,8 +53,10 @@ main(int argc, char *argv[]) {
 //    int answer;
 	int ret;
 	ret = auth();
-	printf("ret: %d\n\r", ret);
-
+	if (ret != 0){
+		printf("ret: %d\n\r", ret);
+		return ret;
+	}
 /*	record *rec = (record *) malloc(sizeof(record));
 	account *user_account = (account *) malloc(sizeof(account));
 	
