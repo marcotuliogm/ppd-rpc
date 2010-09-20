@@ -77,25 +77,25 @@ int auth(account *user_account){
 	return ERR_NOT_AUTHENTICATED;
 }
 
-int *nota_uso_2_svc(int *num_file,  struct svc_req *clnt)
+int *notaUso_2_svc(int *num_file,  struct svc_req *clnt)
 {
 	files[num_file].tam_notas++;
 	files[num_file].notes[files[num_file].tam_notas].em_uso = 1;
 	return ((int *) &files[num_file].tam_note);
 }
 
-file *arq_edit_2_svc(int *num_fl,  struct svc_req *clnt){
+file *arqEdit_2_svc(int *num_fl,  struct svc_req *clnt){
 	return ((file*) &files[num_fl]);
 }
 
-int *save_note_2_svc(note *nota, struct svc_req *clnt){
+int *saveNote_2_svc(note *nota, struct svc_req *clnt){
 	int tam = files[num_file].tam_notas; 
 	files[nota->num_link].notes[tam] = &nota;
 	 return ((int *) &tam);	//criar logica de confimação, DEPOIS
 }
 
 
-int *req_new_file_2_svc(account user, struct svc_req *clnt){
+int *reqNewFile_2_svc(account user, struct svc_req *clnt){
 
 	struct tm *jn;
 	time_t th;
@@ -110,7 +110,7 @@ int *req_new_file_2_svc(account user, struct svc_req *clnt){
 	return ((int *) &count_new_file;	
 }
 
-int *creat_new_file_2_svc(file *fl, struct svc_req *clnt){
+int *creatNewFile_2_svc(file *fl, struct svc_req *clnt){
 	
 	int wh = fl->num_link;
 	files[fl->wh] = &fl;

@@ -67,10 +67,10 @@ int criar_nota(int num_fl, account *usr)
 /////////////////////////////////////////////////////////////////////////////////////
 
 
-	fp = arq_edit(num_fl, cl_auth); //
+	fp = arqEdit_2(num_fl, cl_auth); //
 
 	//em uso.
-	nro_nota = nota_uso(num_fl, cl_auth);
+	nro_nota = notaUso_2(num_fl, cl_auth);
 
 	printf("Arquivo de edicao: %s.\n", fp->title);
 	printf("Ultima alteracao: %s -  %s\n", fp->date, fp->hour);
@@ -98,14 +98,14 @@ int criar_nota(int num_fl, account *usr)
 		//senão grava dados.
 			//request_gravar_nota;
 			//nota, arquivo, ind_nota return true
-		save_note(nota, cl_auth);
+		saveNote_2(nota, cl_auth);
 	}
 }
 
 void add_new_file(account *usr){	//ret 1 se ok e 0 se erro.
 
 	file *fl;
-	int num_fl = req_new_file(usr);
+	int num_fl = reqNewFile_2(usr);
 	char cf[5];
 	int add=0, id;
 
@@ -130,7 +130,7 @@ void add_new_file(account *usr){	//ret 1 se ok e 0 se erro.
 		else break;
 	}
 
-	id = create_new_file(fl);
+	id = createNewFile_2(fl);
 }
 
 
