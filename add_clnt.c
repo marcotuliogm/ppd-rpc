@@ -6,11 +6,27 @@
 #include "addit.h"
 
 #define SERVER "127.0.0.1"
-
+#define MENU_STR_SIZE 30
 
 enum ERROR{
 	ERR_NOT_CONNECTED = -1,
 	ERR_NOT_AUTHENTICATED = -2,
+};
+
+//struct MENU_ITENS{
+//	char descricao[30];
+//}
+char Menu_item[10][MENU_STR_SIZE] = {
+	"Teste 0",
+	"Teste 1",
+	"Teste 2",
+	"Teste 3",
+	"Teste 4",
+	"Teste 5",
+	"Teste 6",
+	"Teste 7",
+	"Teste 8",
+	"Teste 9"
 };
 
 int auth(){
@@ -49,12 +65,48 @@ int auth(){
 main(int argc, char *argv[]) {
 //    CLIENT *cl, *cl_auth;
 //    int answer;
+	int i, option;
 	int ret;
+
 	ret = auth();
 	if (ret != 0){
 		printf("ret: %d\n\r", ret);
 		return ret;
 	}
+
+	printf("sizeof %d \n\r", sizeof(Menu_item));
+
+	for(i = 0; i < sizeof(Menu_item)/MENU_STR_SIZE; i++){
+		printf("%d %s\n\r", i+1, Menu_item[i]);
+	}
+
+	printf("Escolha uma opcao: ");
+	scanf("%d", &option);
+	switch (option){
+		case 1:
+				break;
+		case 2:
+				break;
+		case 3:
+				break;
+		case 4:
+				break;
+		case 5:
+				break;
+		case 6:
+				break;
+		case 7:
+				break;
+		case 8:
+				break;
+		case 9:
+				break;
+		case 10:
+				break;
+		default:
+				break;
+	}
+
 /*	record *rec = (record *) malloc(sizeof(record));
 
     if (argc != 4) {
