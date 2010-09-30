@@ -77,25 +77,26 @@ int auth(account *user_account){
 	return ERR_NOT_AUTHENTICATED;
 }
 
-int *notaUso_2_svc(int *num_file,  struct svc_req *clnt)
+int *notauso_2_svc(int *num_file,  struct svc_req *clnt)
 {
-	files[num_file].tam_notas++;
-	files[num_file].notes[files[num_file].tam_notas].em_uso = 1;
-	return ((int *) &files[num_file].tam_note);
+	files[*num_file].tam_note++;
+	files[*num_file].notes[files[*num_file].tam_note].estou_em_uso = 1;
+	return ((int *) &files[*num_file].tam_note);
 }
 
-file *arqEdit_2_svc(int *num_fl,  struct svc_req *clnt){
-	return ((file*) &files[num_fl]);
+file *arqedit_2_svc(int *num_fl,  struct svc_req *clnt){
+	return ((file *) &files[*num_fl]);
+//	return files[num_fl];
 }
 
-int *saveNote_2_svc(note *nota, struct svc_req *clnt){
-	int tam = files[num_file].tam_notas; 
-	files[nota->num_link].notes[tam] = &nota;
-	 return ((int *) &tam);	//criar logica de confimação, DEPOIS
+int *savenote_2_svc(note *nota, struct svc_req *clnt){
+	int tam = files[nota->num_link].tam_note; 
+	files[nota->num_link].notes[tam] = *nota;
+	 return ((int *) &nota->num_link);	//criar logica de confimação, DEPOIS
 }
 
 
-int *reqNewFile_2_svc(account user, struct svc_req *clnt){
+int *reqnewfile_2_svc(account user, struct svc_req *clnt){
 
 	struct tm *jn;
 	time_t th;
@@ -103,18 +104,18 @@ int *reqNewFile_2_svc(account user, struct svc_req *clnt){
 	th = time(NULL);
 	jn = localtime(&th);
 
-	count_new_file++;
-    	strftime(files[count_new_file]->hour, 100, "%T", ptr);
-    	strftime(files[count_new_file]->date, 100, "%A, %D.", ptr);
+	count_file++;
+    	strftime(files[count_file].hour, 100, "%T", jn);
+    	strftime(files[count_file].date, 100, "%A, %D.", jn);
 
-	return ((int *) &count_new_file;	
+	return ((int *) &count_file);	
 }
 
-int *creatNewFile_2_svc(file *fl, struct svc_req *clnt){
+int *creatnewfile_2_svc(file *fl, struct svc_req *clnt){
 	
 	int wh = fl->num_link;
-	files[fl->wh] = &fl;
-	return ((int *) &wh);	//criar logica de confimação, DEPOIS	
+	files[wh] = *fl;
+	return ((int *) &fl->num_link);	//criar logica de confimação, DEPOIS	
 }
 
 

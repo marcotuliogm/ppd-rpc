@@ -67,10 +67,10 @@ int criar_nota(int num_fl, account *usr)
 /////////////////////////////////////////////////////////////////////////////////////
 
 
-	fp = arqEdit_2(num_fl, cl_auth); //
+	fp = arqedit_2(&num_fl, cl_auth); //
 
 	//em uso.
-	nro_nota = notaUso_2(num_fl, cl_auth);
+	nro_nota = notauso_2(num_fl, cl_auth);
 
 	printf("Arquivo de edicao: %s.\n", fp->title);
 	printf("Ultima alteracao: %s -  %s\n", fp->date, fp->hour);
@@ -98,16 +98,26 @@ int criar_nota(int num_fl, account *usr)
 		//senão grava dados.
 			//request_gravar_nota;
 			//nota, arquivo, ind_nota return true
-		saveNote_2(nota, cl_auth);
+		savenote_2(nota, cl_auth);
 	}
 }
 
 void add_new_file(account *usr){	//ret 1 se ok e 0 se erro.
 
 	file *fl;
-	int num_fl = reqNewFile_2(usr);
+	int num_fl;
 	char cf[5];
 	int add=0, id;
+
+/////////////////////////////////////////////////////////////////////////////////////
+	CLIENT *cl_auth;
+	if (!(cl_auth = clnt_create(SERVER, ADDITPROG, ACCOUNT_MANAGER,"tcp"))) { 
+        	clnt_pcreateerror(SERVER); 
+        	return ERR_NOT_CONNECTED; 
+    	}
+/////////////////////////////////////////////////////////////////////////////////////
+
+	num_fl = reqnewfile_2(usr, cl_auth);
 
 	printf("%s \t %s", fl->date, fl->hour);
 	printf("Informe o Titulo: ");
@@ -130,7 +140,7 @@ void add_new_file(account *usr){	//ret 1 se ok e 0 se erro.
 		else break;
 	}
 
-	id = createNewFile_2(fl);
+	id = createnewfile_2(fl, cl_auth);
 }
 
 
@@ -161,7 +171,13 @@ main(int argc, char *argv[]) {
 		printf("Onde:\n");
 		printf("        <hostname> hostname ou endereco IP do servidor.\n");
 		printf("        <operando> deve ser um número inteiro.\n");
-        exit (1); 
+        exit (1); /////////////////////////////////////////////////////////////////////////////////////
+	CLIENT *cl_auth;
+	if (!(cl_auth = clnt_create(SERVER, ADDITPROG, ACCOUNT_MANAGER,"tcp"))) { 
+        	clnt_pcreateerror(SERVER); 
+        	return ERR_NOT_CONNECTED; 
+    	}
+/////////////////////////////////////////////////////////////////////////////////////
 	} 
 
 //	if (!(cl = clnt_create(argv[1], ADDITPROG,ADDITVERS,"tcp"))) { 
