@@ -13,7 +13,7 @@ enum ERROR{
 
 int init = 0; /* Control if struct accounts alread initializated */
 int max_users = 0; /* Read user of file */
-account accounts[30];
+Accounts accounts;
 
 file files[100];	//max file
 int count_file = 0;
@@ -66,13 +66,18 @@ int *createnewfile_1_svc(file *fl, struct svc_req *clnt){
 	return ((int *) &fl->num_link);	//criar logica de confimação, DEPOIS
 }
 
+Accounts *showusers_1_svc(int *not_used, struct svc_req *clnt){
+//	return ((Accounts *) &accounts);	//criar logica de confimação, DEPOIS
+	return ((Accounts *) &accounts);
+}
+
 int *authentication_2_svc(account *user_account, struct svc_req *clnt){
 	static int result;
 	char line[80];
 
 	init_users();
 	result = auth(user_account);
-	sprintf(line, "user %s password %s - ", user_account->user, user_account->password);
+	sprintf(line, "user %s password %s - ", user_account->login, user_account->password);
 	if (result < 0) printf("%s not authenticated\n\r", line);
 	else printf("%s authenticated\n\r", line);
 	return ((int *) &result);
@@ -84,27 +89,28 @@ init_users(){
 	char user[10];
 	char password[10];
 	int index = 0;
+	accounts.max_users = 0;
 	init++;
 	printf("Init Users\n\r");
 	pfile = fopen ("file.txt", "r") ;
 	if (pfile == NULL) return -1;
 	while (!feof(pfile)){// && (mem_ind <= memory.partition[partition].last_address)){
 		fscanf (pfile, "%10s%10s", user, password);
-		accounts[index].ind = index;
-		strcpy(accounts[index].user, user);
-		strcpy(accounts[index].password, password);
-		printf("index %d user: %s, password: %s\n\r", index, accounts[index].user, accounts[index].password);
+		accounts.user[index].ind = index;
+		strcpy(accounts.user[index].login, user);
+		strcpy(accounts.user[index].password, password);
+		printf("index %d user: %s, password: %s\n\r", index, accounts.user[index].login, accounts.user[index].password);
 		index++;
 	}
-	max_users = index;
+	accounts.max_users = index-1;
 }
 
 int auth(account *user_account){
 	int i;
-	for (i = 0; i < max_users; i++){
-		printf("Comparando %s com %s", user_account->user, accounts[i].user);
-		if (!strcmp(user_account->user, accounts[i].user)){
-			if (!strcmp(user_account->password, accounts[i].password)){
+	for (i = 0; i < accounts.max_users; i++){
+		printf("Comparando %s com %s", user_account->login, accounts.user[i].login);
+		if (!strcmp(user_account->login, accounts.user[i].login)){
+			if (!strcmp(user_account->password, accounts.user[i].password)){
 				printf("Ok \n\r");
 				return 0;
 			}

@@ -25,7 +25,7 @@ int auth(){
 	do {
 		printf("------------------------------ USER LOGIN ------------------------------\n\r");
 		printf("User: ");
-		scanf("%s", user_account->user);
+		scanf("%s", user_account->login);
 		printf("Password: ");
 		scanf("%s", user_account->password);
 
@@ -78,7 +78,7 @@ int criar_nota(int num_fl, account *usr)
 		//parametros nota.
 		printf("Titulo: ");
 		scanf(nota->title, "&s");
-		strcpy(nota->user_edit, usr->user);
+		strcpy(nota->user_edit, usr->login);
 		nota->estou_em_uso = 0;	//0 porque é criação, ou seja, inicialização.
 
 		printf("Conteudo: ");
@@ -139,6 +139,17 @@ int add_new_file(account *usr){	//ret 1 se ok e 0 se erro.
 	id = createnewfile_1(fl, cl_auth);
 }
 
+void show_users(){
+	Accounts *accounts;
+	int i;
+	accounts = showusers_1(0, cl_docs);	
+//	printf("Teste %d", accounts->max_users);
+//	for (i=0; i<accounts->max_users; i++){
+//		printf("%d %s\n\r", i+1, accounts->user[i].login);
+//	};
+}
+
+
 void show_menu_docs(){
 	int volta = 0,
 		option,
@@ -166,7 +177,7 @@ void show_menu_docs(){
 //					show_search();
 					break;
 			case ITEM5:
-//					show_users();
+					show_users();
 					break;
 			case ITEM6:
 					break;
@@ -221,7 +232,7 @@ main(int argc, char *argv[]) {
 //					show_search();
 					break;
 			case ITEM5:
-//					show_users();
+					show_users();
 					break;
 			case ITEM6:
 					exit = 1;
