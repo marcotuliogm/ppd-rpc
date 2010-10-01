@@ -14,8 +14,13 @@ typedef int	vet[MAX_NR];
 
 struct account{
 	int ind;
-	char user[30];
+	char login[30];
 	char password[30];
+};
+
+struct Accounts{
+	account user[30];
+	int max_users;
 };
 
 struct note{
@@ -25,6 +30,7 @@ struct note{
 	int num_link;
 	int estou_em_uso;
 };
+
 
 struct file{
 	text_t	title;
@@ -45,6 +51,7 @@ program DOCS {                /* value to register the program */
 		int SAVENOTE(note) = 4;
 		int REQNEWFILE(account) = 5;
 		int CREATENEWFILE(file) = 6;
+		Accounts SHOWUSERS(int) = 7;
     } = 1;                          /* version value */
 	version ACCOUNT_MANAGER {			/* Service for authentications*/
 		int AUTHENTICATION(account) = 1;
