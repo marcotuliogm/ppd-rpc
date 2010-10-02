@@ -66,9 +66,12 @@ int *createnewfile_1_svc(file *fl, struct svc_req *clnt){
 	return ((int *) &fl->num_link);	//criar logica de confimação, DEPOIS
 }
 
-Accounts *showusers_1_svc(int *not_used, struct svc_req *clnt){
-//	return ((Accounts *) &accounts);	//criar logica de confimação, DEPOIS
-	return ((Accounts *) &accounts);
+struct Accounts * showusers_1_svc(int *not_used, struct svc_req *clnt){
+	static Accounts ret;
+	ret = accounts;
+	printf("Return accounts\n\r");
+//	return (&accounts);	//criar logica de confimação, DEPOIS
+	return (&ret);
 }
 
 int *authentication_2_svc(account *user_account, struct svc_req *clnt){
