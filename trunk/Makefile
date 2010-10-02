@@ -14,7 +14,7 @@ CC=gcc
 LIBS=
 
 
-all: generate_stubs client server 
+all: clean generate_stubs client server 
 
 client: 
 	$(CC) add_clnt.c addit_clnt.o addit_xdr.o -o client 

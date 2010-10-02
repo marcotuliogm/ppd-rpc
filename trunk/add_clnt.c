@@ -66,7 +66,7 @@ int criar_nota(int num_fl, account *usr)
 	fp = arqedit_1(&num_fl, cl_auth); //
 
 	//em uso.
-	nro_nota = notauso_1(&num_fl, cl_auth);
+	nro_nota = *notauso_1(&num_fl, cl_auth);
 
 	printf("Arquivo de edicao: %s.\n", fp->title);
 	printf("Ultima alteracao: %s -  %s\n", fp->date, fp->hour);
@@ -113,7 +113,7 @@ int add_new_file(account *usr){	//ret 1 se ok e 0 se erro.
     	}
 /////////////////////////////////////////////////////////////////////////////////////
 
-	num_fl = reqnewfile_1(usr, cl_auth);
+	num_fl = *reqnewfile_1(usr, cl_auth);
 
 	printf("%s \t %s", fl->date, fl->hour);
 	printf("Informe o Titulo: ");
@@ -136,17 +136,19 @@ int add_new_file(account *usr){	//ret 1 se ok e 0 se erro.
 		else break;
 	}
 
-	id = createnewfile_1(fl, cl_auth);
+	id = *createnewfile_1(fl, cl_auth);
 }
 
-void show_users(){
-	Accounts *accounts;
+int show_users(){
+	Accounts *st_account = NULL;
 	int i;
-	accounts = showusers_1(0, cl_docs);	
-//	printf("Teste %d", accounts->max_users);
-//	for (i=0; i<accounts->max_users; i++){
-//		printf("%d %s\n\r", i+1, accounts->user[i].login);
-//	};
+	printf("Teste\n\r");
+	st_account = showusers_1(&i, cl_docs);	
+	printf("\n\r------ Lista de usuarios ------\n\r");
+	for (i=0; i<st_account->max_users; i++){
+		printf("%d %s\n\r", i+1, st_account->user[i].login);
+	};
+	printf("---- FIM Lista de usuarios ----\n\r\n\r");
 }
 
 
@@ -177,7 +179,6 @@ void show_menu_docs(){
 //					show_search();
 					break;
 			case ITEM5:
-					show_users();
 					break;
 			case ITEM6:
 					break;
@@ -232,6 +233,7 @@ main(int argc, char *argv[]) {
 //					show_search();
 					break;
 			case ITEM5:
+					printf("Show Users\n\r");
 					show_users();
 					break;
 			case ITEM6:
