@@ -34,9 +34,8 @@ int *notauso_1_svc(int *num_file,  struct svc_req *clnt)
 	return ((int *) &files[*num_file].tam_note);
 }
 
-file *arqedit_1_svc(int *num_fl,  struct svc_req *clnt){
-	return ((file *) &files[*num_fl]);
-//	return files[num_fl];
+struct file * arqedit_1_svc(int *num_fl,  struct svc_req *clnt){
+	return (&files[*num_fl]);
 }
 
 int *savenote_1_svc(note *nota, struct svc_req *clnt){
@@ -64,6 +63,17 @@ int *createnewfile_1_svc(file *fl, struct svc_req *clnt){
 	int wh = fl->num_link;
 	files[wh] = *fl;
 	return ((int *) &fl->num_link);	//criar logica de confimação, DEPOIS
+}
+
+int *showdocspermission_1_svc(account *usr, struct svc_req *clnt){
+	int i, j;
+	for(i=0;i<count_file;i++){
+		for(j=0;j<files[i].count_permission;j++){
+			if(usr->ind == files[i].permissoes[j])
+				printf("%d - %s", i, files[i].title);
+		}	
+	}
+	return ((int *) &count_file);
 }
 
 struct Accounts * showusers_1_svc(int *not_used, struct svc_req *clnt){

@@ -11,6 +11,8 @@
 
 
 CLIENT *cl_docs = NULL;
+file *file_open;	//id do documento aberto...
+account *usr_now;
 
 int auth(){
 	int answer;
@@ -54,19 +56,19 @@ int criar_nota(int num_fl, account *usr)
 	int grv_note;
 	int nro_nota;
 
-/////////////////////////////////////////////////////////////////////////////////////
+/*
 	CLIENT *cl_auth;
 	if (!(cl_auth = clnt_create(SERVER, DOCS, DOCUMENTS_MANAGER,"tcp"))) { 
         	clnt_pcreateerror(SERVER); 
         	return ERR_NOT_CONNECTED; 
     	}
-/////////////////////////////////////////////////////////////////////////////////////
+*/
 
 
-	fp = arqedit_1(&num_fl, cl_auth); //
+	fp = arqedit_1(&num_fl, cl_docs); //
 
 	//em uso.
-	nro_nota = *notauso_1(&num_fl, cl_auth);
+	nro_nota = *notauso_1(&num_fl, cl_docs);
 
 	printf("Arquivo de edicao: %s.\n", fp->title);
 	printf("Ultima alteracao: %s -  %s\n", fp->date, fp->hour);
@@ -74,12 +76,12 @@ int criar_nota(int num_fl, account *usr)
 	nota->num_link = num_fl;
 
 	while(1){
-		strcpy(conf, "no"); //confirmação de envio.
+		strcpy(conf, "no"); //confirmaï¿½ï¿½o de envio.
 		//parametros nota.
 		printf("Titulo: ");
 		scanf(nota->title, "&s");
 		strcpy(nota->user_edit, usr->login);
-		nota->estou_em_uso = 0;	//0 porque é criação, ou seja, inicialização.
+		nota->estou_em_uso = 0;	//0 porque ï¿½ criaï¿½ï¿½o, ou seja, inicializaï¿½ï¿½o.
 
 		printf("Conteudo: ");
 		scanf(nt_add, "&s");
@@ -91,29 +93,32 @@ int criar_nota(int num_fl, account *usr)
 
 		if(strcmp(conf,"yes")!=0) continue;
 
-		//senão grava dados.
+		//senï¿½o grava dados.
 			//request_gravar_nota;
 			//nota, arquivo, ind_nota return true
-		savenote_1(nota, cl_auth);
+		savenote_1(nota, cl_docs);
 	}
 }
+
+
+
+
 
 int add_new_file(account *usr){	//ret 1 se ok e 0 se erro.
 
 	file *fl;
 	int num_fl;
 	char cf[5];
-	int add=0, id;
+	int id;
 
-/////////////////////////////////////////////////////////////////////////////////////
-	CLIENT *cl_auth;
-	if (!(cl_auth = clnt_create(SERVER, DOCS, DOCUMENTS_MANAGER,"tcp"))) { 
+/*
+	if (!(cl_docs = clnt_create(SERVER, DOCS, DOCUMENTS_MANAGER,"tcp"))) { 
         	clnt_pcreateerror(SERVER); 
         	return ERR_NOT_CONNECTED; 
     	}
-/////////////////////////////////////////////////////////////////////////////////////
+*/
 
-	num_fl = *reqnewfile_1(usr, cl_auth);
+	num_fl = *reqnewfile_1(usr, cl_docs);
 
 	printf("%s \t %s", fl->date, fl->hour);
 	printf("Informe o Titulo: ");
@@ -124,6 +129,7 @@ int add_new_file(account *usr){	//ret 1 se ok e 0 se erro.
 
 	fl->tam_note = 0;
 	fl->num_link = num_fl;
+	fl->count_permission =0;
 
 	while(1){
 		printf("Deseja adicionar nova permissao de usuario (yes,no): ");
@@ -131,12 +137,13 @@ int add_new_file(account *usr){	//ret 1 se ok e 0 se erro.
 		if (strcmp(cf, "yes")){
 			printf("ID: ");
 			scanf("%d", &id);
-			fl->permissoes[add] = id;
+			fl->permissoes[fl->count_permission] = id;
+			fl->count_permission++;
 		}
 		else break;
 	}
 
-	id = *createnewfile_1(fl, cl_auth);
+	id = *createnewfile_1(fl, cl_docs);
 }
 
 int show_users(){
@@ -152,10 +159,35 @@ int show_users(){
 }
 
 
+int open_document(){
+	
+	int per, id;
+	per = *showdocspermission_1(usr_now, cl_docs);
+	do{
+		printf("Informe o ID do documento.");
+		scanf("%d", &id);
+	}while(id>=per);
+
+	file_open = arqedit_1(&id, cl_docs);
+	
+	return 1;
+}
+
+void associar_usuario(int usr_add){
+	file_open->permissoes[file_open->count_permission] = usr_add;
+	file_open->count_permission++;
+
+	*createnewfile_1(file_open, cl_docs); //apesar de estar create, se fosse implementar uma funÃ§Ã£o ia ficar igual, so.
+}
+
+
+
 void show_menu_docs(){
 	int volta = 0,
 		option,
-		i;
+		i, usr_add;
+
+	//escolher doc aqui...........................
 
 	while (!volta){
 		for(i = 0; MENU_DOCS[i].desc!=NULL; i++){
@@ -166,8 +198,10 @@ void show_menu_docs(){
 		scanf("%d", &option);
 		switch (option){
 			case ITEM1:
-//					show_users();
-//					associar_usuario(int usuario);
+					show_users();
+					printf("Informe o ID do usuario: ");					
+					scanf("%d", &usr_add);
+					associar_usuario(usr_add);
 					break;
 			case ITEM2:
 					show_menu_docs();
@@ -223,7 +257,7 @@ main(int argc, char *argv[]) {
 //					add_new_file(); //usuario sera global apos a autenticacao
 					break;
 			case ITEM2:
-//					open_documet(); //Variavel global com indice do documento aberto
+					open_document(); //Variavel global com indice do documento aberto
 					show_menu_docs();
 					break;
 			case ITEM3:
@@ -248,7 +282,7 @@ main(int argc, char *argv[]) {
         printf("Usage: %s hostname <operando> <operando>\n", argv[0]); 
 		printf("Onde:\n");
 		printf("        <hostname> hostname ou endereco IP do servidor.\n");
-		printf("        <operando> deve ser um número inteiro.\n");
+		printf("        <operando> deve ser um nï¿½mero inteiro.\n");
         exit (1);
 	}
 
