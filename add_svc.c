@@ -44,6 +44,7 @@ int *savenote_1_svc(note *nota, struct svc_req *clnt){
 	 return ((int *) &nota->num_link);	//criar logica de confimação, DEPOIS
 }
 
+
 int *reqnewfile_1_svc(account *user, struct svc_req *clnt){
 	struct tm *jn;
 	time_t th;
