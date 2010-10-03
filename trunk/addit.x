@@ -39,6 +39,7 @@ struct file{
 	note notes[100];
 	int tam_note;
 	int permissoes[100];
+	int count_permission;
 	data_t conteudo_inicial;
 	int num_link;
 };
@@ -52,6 +53,7 @@ program DOCS {                /* value to register the program */
 		int REQNEWFILE(account) = 5;
 		int CREATENEWFILE(file) = 6;
 		Accounts SHOWUSERS(int) = 7;
+		int SHOWDOCSPERMISSION(account) = 8;
     } = 1;                          /* version value */
 	version ACCOUNT_MANAGER {			/* Service for authentications*/
 		int AUTHENTICATION(account) = 1;
