@@ -44,16 +44,21 @@ struct file{
 	int num_link;
 };
 
+struct Files{
+	file doc[100];
+	int max_files;
+};
+
 program DOCS {                /* value to register the program */
     version DOCUMENTS_MANAGER {            /* version must be assigned a value */
         int ADD_ARGS(record) = 1;  /* this is the service function */
 		int NOTAUSO(int) = 2;
 		file ARQEDIT(int) = 3;
 		int SAVENOTE(note) = 4;
-		int REQNEWFILE(account) = 5;
+		int REQNEWFILE(int) = 5;
 		int CREATENEWFILE(file) = 6;
 		Accounts SHOWUSERS(int) = 7;
-		int SHOWDOCSPERMISSION(account) = 8;
+		Files SHOWDOCSPERMISSION(int) = 8;
     } = 1;                          /* version value */
 	version ACCOUNT_MANAGER {			/* Service for authentications*/
 		int AUTHENTICATION(account) = 1;
