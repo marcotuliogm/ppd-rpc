@@ -13,6 +13,8 @@
 CLIENT *cl_docs = NULL;
 file *file_open;	//id do documento aberto...
 account *usr_now;
+int user = ERR_NOT_AUTHENTICATED;
+int open_file = ERR_NOT_EXIST;
 
 int auth(){
 	int answer;
@@ -32,17 +34,18 @@ int auth(){
 		scanf("%s", user_account->password);
 
 		answer = *authentication_2(user_account, cl_auth);
-		printf("answer %d\n\r", answer);
+//		printf("answer %d\n\r", answer);
 	    if (answer < 0) {
 	        printf("User or password wrong: try again\n\r");
 			retry--;
 	    }
-	} while ((retry > 0) & (answer != 0));
+	} while ((retry > 0) & (answer < 0));
 	if (retry == 0){
 		clnt_destroy(cl_auth);
         printf("Number of retries exceeded\n\r");
 		return ERR_NOT_AUTHENTICATED;
 	}
+	user = answer;
 	clnt_destroy(cl_auth);
 	return 0;
 }
@@ -50,7 +53,7 @@ int auth(){
 int criar_nota(int num_fl, account *usr)
 {
 	data_t	nt_add;
-	file *fp;
+	file *fp = (file *) malloc(sizeof(file));
 	note *nota;	
 	char conf[10];
 	int grv_note;
@@ -93,7 +96,7 @@ int criar_nota(int num_fl, account *usr)
 
 		if(strcmp(conf,"yes")!=0) continue;
 
-		//sen�o grava dados.
+		//senao grava dados.
 			//request_gravar_nota;
 			//nota, arquivo, ind_nota return true
 		savenote_1(nota, cl_docs);
@@ -104,12 +107,11 @@ int criar_nota(int num_fl, account *usr)
 
 
 
-int add_new_file(account *usr){	//ret 1 se ok e 0 se erro.
+int add_new_file(){	//ret 1 se ok e 0 se erro.
 
-	file *fl;
+	file *fl = (file *) malloc(sizeof(file));;
 	int num_fl;
 	char cf[5];
-	int id;
 
 /*
 	if (!(cl_docs = clnt_create(SERVER, DOCS, DOCUMENTS_MANAGER,"tcp"))) { 
@@ -118,38 +120,45 @@ int add_new_file(account *usr){	//ret 1 se ok e 0 se erro.
     	}
 */
 
-	num_fl = *reqnewfile_1(usr, cl_docs);
+	num_fl = *reqnewfile_1(&user, cl_docs);
 
-	printf("%s \t %s", fl->date, fl->hour);
 	printf("Informe o Titulo: ");
-	scanf(fl->title, "&s");
+	getchar();
+	scanf("%[A-Z a-z]", fl->title);
 	printf("------------------------------------------------------------------------------------------\n");
 	printf("Conteudo: \n");
-	scanf(fl->conteudo_inicial, "%s");
+	getchar();
+	scanf("%[A-Z a-z]", fl->conteudo_inicial);
 
 	fl->tam_note = 0;
 	fl->num_link = num_fl;
-	fl->count_permission =0;
+	fl->permissoes[0] = user;
+	fl->count_permission = 1;
 
-	while(1){
-		printf("Deseja adicionar nova permissao de usuario (yes,no): ");
-		scanf(cf, "%s");
-		if (strcmp(cf, "yes")){
-			printf("ID: ");
-			scanf("%d", &id);
-			fl->permissoes[fl->count_permission] = id;
-			fl->count_permission++;
-		}
-		else break;
-	}
-
-	id = *createnewfile_1(fl, cl_docs);
+	open_file = *createnewfile_1(fl, cl_docs);
 }
+
+int show_my_docs(){
+	Files *st_files = NULL;
+	int i;
+	printf("Teste\n\r");
+	st_files = showdocspermission_1(&user, cl_docs);
+	printf("\n\r------ Lista de Documentos ------\n\r");
+	if (st_files != NULL){
+		printf("Numero de documentos %d\n\r", st_files->max_files);
+		printf("NUM | Titulo \n\r");
+		for (i=0; i<st_files->max_files; i++){
+			printf("%-3d | %s\n\r", st_files->doc[i].num_link, st_files->doc[i].title);
+		};
+	}
+	printf("---- FIM Lista de Documentos ----\n\r\n\r");
+
+}
+
 
 int show_users(){
 	Accounts *st_account = NULL;
 	int i;
-	printf("Teste\n\r");
 	st_account = showusers_1(&i, cl_docs);	
 	printf("\n\r------ Lista de usuarios ------\n\r");
 	for (i=0; i<st_account->max_users; i++){
@@ -162,7 +171,7 @@ int show_users(){
 int open_document(){
 	
 	int per, id;
-	per = *showdocspermission_1(usr_now, cl_docs);
+//	per = *showdocspermission_1(user, cl_docs);
 	do{
 		printf("Informe o ID do documento.");
 		scanf("%d", &id);
@@ -204,13 +213,11 @@ void show_menu_docs(){
 					associar_usuario(usr_add);
 					break;
 			case ITEM2:
-					show_menu_docs();
+//					show_propriedades(); //open_doc global
 					break;
 			case ITEM3:
-//					show_my_files();
 					break;
 			case ITEM4:
-//					show_search();
 					break;
 			case ITEM5:
 					break;
@@ -254,14 +261,17 @@ main(int argc, char *argv[]) {
 		scanf("%d", &option);
 		switch (option){
 			case ITEM1:
-//					add_new_file(); //usuario sera global apos a autenticacao
+					add_new_file(); //usuario sera global apos a autenticacao
 					break;
 			case ITEM2:
 					open_document(); //Variavel global com indice do documento aberto
 					show_menu_docs();
 					break;
 			case ITEM3:
-//					show_my_files();
+					show_my_docs();
+					printf("Pressione uma tecla para continuar\n\r");
+//					scanf("%d", &option);
+					getchar();					
 					break;
 			case ITEM4:
 //					show_search();

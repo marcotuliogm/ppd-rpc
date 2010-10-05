@@ -14,8 +14,8 @@ enum ERROR{
 int init = 0; /* Control if struct accounts alread initializated */
 int max_users = 0; /* Read user of file */
 Accounts accounts;
-
-file files[100];	//max file
+Files files;
+//file files[100];	//max file
 int count_file = 0;
 
 int *add_args_1_svc(record *rec, struct svc_req *clnt) {
@@ -29,52 +29,62 @@ int *add_args_1_svc(record *rec, struct svc_req *clnt) {
 
 int *notauso_1_svc(int *num_file,  struct svc_req *clnt)
 {
-	files[*num_file].tam_note++;
-	files[*num_file].notes[files[*num_file].tam_note].estou_em_uso = 1;
-	return ((int *) &files[*num_file].tam_note);
+	files.doc[*num_file].tam_note++;
+	files.doc[*num_file].notes[files.doc[*num_file].tam_note].estou_em_uso = 1;
+	return ((int *) &files.doc[*num_file].tam_note);
 }
 
 struct file * arqedit_1_svc(int *num_fl,  struct svc_req *clnt){
-	return (&files[*num_fl]);
+	return (&files.doc[*num_fl]);
 }
 
 int *savenote_1_svc(note *nota, struct svc_req *clnt){
-	int tam = files[nota->num_link].tam_note;
-	files[nota->num_link].notes[tam] = *nota;
+	int tam = files.doc[nota->num_link].tam_note;
+	files.doc[nota->num_link].notes[tam] = *nota;
 	 return ((int *) &nota->num_link);	//criar logica de confimação, DEPOIS
 }
 
 
-int *reqnewfile_1_svc(account *user, struct svc_req *clnt){
+int *reqnewfile_1_svc(int *user, struct svc_req *clnt){
+	static int file_index;
 	struct tm *jn;
 	time_t th;
 
+	file_index = files.max_files;
+	printf("User %d request new file\n\r", *user);
 	th = time(NULL);
 	jn = localtime(&th);
 
-	count_file++;
-    	strftime(files[count_file].hour, 100, "%T", jn);
-    	strftime(files[count_file].date, 100, "%A, %D.", jn);
+    	strftime(files.doc[file_index].hour, 100, "%T", jn);
+    	strftime(files.doc[file_index].date, 100, "%A, %D.", jn);
 
-	return ((int *) &count_file);
+	printf("%s \t %s\n\r", files.doc[file_index].date, files.doc[file_index].hour);
+	files.max_files++;
+	return ((int *) &file_index);
 }
 
 int *createnewfile_1_svc(file *fl, struct svc_req *clnt){
 
 	int wh = fl->num_link;
-	files[wh] = *fl;
+	files.doc[wh] = *fl;
 	return ((int *) &fl->num_link);	//criar logica de confimação, DEPOIS
 }
 
-int *showdocspermission_1_svc(account *usr, struct svc_req *clnt){
+struct Files *showdocspermission_1_svc(int *user, struct svc_req *clnt){
 	int i, j;
-	for(i=0;i<count_file;i++){
-		for(j=0;j<files[i].count_permission;j++){
-			if(usr->ind == files[i].permissoes[j])
-				printf("%d - %s", i, files[i].title);
-		}	
+	static Files ret;
+	ret.max_files = 0;
+	for(i=0; i<files.max_files ;i++){
+		for(j=0; j<files.doc[i].count_permission; j++){
+			if(*user == files.doc[i].permissoes[j]){
+				printf("%d %d - %s\n\r", *user, files.doc[i].permissoes[j], files.doc[i].title);
+				ret.doc[ret.max_files] = files.doc[i];
+				ret.doc[ret.max_files].num_link = i;
+				ret.max_files++;
+			}
+		}
 	}
-	return ((int *) &count_file);
+	return (&ret);
 }
 
 struct Accounts * showusers_1_svc(int *not_used, struct svc_req *clnt){
@@ -110,7 +120,7 @@ init_users(){
 	if (pfile == NULL) return -1;
 	while (!feof(pfile)){// && (mem_ind <= memory.partition[partition].last_address)){
 		fscanf (pfile, "%10s%10s", user, password);
-		accounts.user[index].ind = index;
+		accounts.user[index].ind = 0; //variavel para troca de dados
 		strcpy(accounts.user[index].login, user);
 		strcpy(accounts.user[index].password, password);
 		printf("index %d user: %s, password: %s\n\r", index, accounts.user[index].login, accounts.user[index].password);
@@ -126,7 +136,7 @@ int auth(account *user_account){
 		if (!strcmp(user_account->login, accounts.user[i].login)){
 			if (!strcmp(user_account->password, accounts.user[i].password)){
 				printf("Ok \n\r");
-				return 0;
+				return i;
 			}
 		}
 		printf("NOk\n\r");

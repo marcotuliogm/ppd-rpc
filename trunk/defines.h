@@ -4,6 +4,7 @@
 enum ERROR{
 	ERR_NOT_CONNECTED = -1,
 	ERR_NOT_AUTHENTICATED = -2,
+	ERR_NOT_EXIST = -3
 };
 
 typedef enum
@@ -30,12 +31,12 @@ typedef struct
 //! Menu itens table
 static ITENS MENU[] =
 {
-    { ITEM1        , "Criar Documento					"},
+    { ITEM1        , "* Criar Documento					"},
     { ITEM2        , "Abri Documento					"},
     { ITEM3        , "Meus documentos					"},
     { ITEM4        , "Documentos alterados por data/hora"},
-    { ITEM5        , "Listar Usuarios					"},
-    { ITEM6        , "Exit								"},
+    { ITEM5        , "* Listar Usuarios					"},
+    { ITEM6        , "* Exit								"},
     { ITEM7        , NULL},
 };
 
@@ -47,7 +48,7 @@ static ITENS MENU_DOCS[] =
     { ITEM4        , "Editar nota                  "},
     { ITEM5        , "Exibir nota                  "},
     { ITEM6        , "Exibir Documento             "},
-    { ITEM7        , "Voltar					   "},
+    { ITEM7        , "* Voltar					   "},
     { ITEM8        , NULL},
 };
 /*
