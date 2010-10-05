@@ -27,11 +27,16 @@ int *add_args_1_svc(record *rec, struct svc_req *clnt) {
     return ((int *) &result);
 }
 
-int *notauso_1_svc(int *num_file,  struct svc_req *clnt)
-{
-	files.doc[*num_file].tam_note++;
-	files.doc[*num_file].notes[files.doc[*num_file].tam_note].estou_em_uso = 1;
-	return ((int *) &files.doc[*num_file].tam_note);
+struct note * getnote_1_svc(intret *param, struct svc_req *clnt){
+	static note ret;
+	if (!files.doc[param->param1].notes[param->param2].estou_em_uso){
+		ret = files.doc[param->param1].notes[param->param2];
+		files.doc[param->param1].notes[param->param2].estou_em_uso = 1;
+		printf("Return note\n\r");
+		return (&ret);
+	}
+	ret = files.doc[param->param1].notes[param->param2];
+	return (&ret);
 }
 
 struct file * arqedit_1_svc(int *num_fl,  struct svc_req *clnt){
@@ -40,24 +45,26 @@ struct file * arqedit_1_svc(int *num_fl,  struct svc_req *clnt){
 
 int *savenote_1_svc(note *nota, struct svc_req *clnt){
 	files.doc[nota->num_file].notes[nota->num_note] = *nota;
+
 	return ((int *) &nota->num_file);	//criar logica de confimação, DEPOIS
 }
 
 
 int *reqnewfile_1_svc(int *user, struct svc_req *clnt){
 	static int file_index;
-	struct tm *jn;
-	time_t th;
+	char buff[80];
+//	struct tm *jn;
+//	time_t th;
 
 	file_index = files.max_files;
 	printf("User %d request new file\n\r", *user);
-	th = time(NULL);
-	jn = localtime(&th);
+//	th = time(NULL);
+//	jn = localtime(&th);
 
-    	strftime(files.doc[file_index].hour, 100, "%T", jn);
-    	strftime(files.doc[file_index].date, 100, "%A, %D.", jn);
-
-	printf("%s \t %s\n\r", files.doc[file_index].date, files.doc[file_index].hour);
+//    	strftime(files.doc[file_index].hour, 100, "%T", jn);
+//  	strftime(files.doc[file_index].date, 100, "%A, %D.", jn);
+//	files.doc[file_index].date_time = time(NULL);
+	time(&files.doc[file_index].date_time);
 	files.max_files++;
 	return ((int *) &file_index);
 }
@@ -73,6 +80,7 @@ struct Files *showdocspermission_1_svc(int *user, struct svc_req *clnt){
 	int i, j;
 	static Files ret;
 	ret.max_files = 0;
+	printf("Show user files %d\n\r", *user);
 	for(i=0; i<files.max_files ;i++){
 		for(j=0; j<files.doc[i].count_permission; j++){
 			if(*user == files.doc[i].permissoes[j]){
@@ -110,9 +118,9 @@ int *checkper_1_svc(intret *param, struct svc_req *clnt){
 int *setpermission_1_svc(intret *param, struct svc_req *clnt){
 	static int result;
 	int ind = param->param1;
+	printf ("set permission for user %d to file %d\n\r", param->param2, param->param1);
 	files.doc[ind].permissoes[files.doc[ind].count_permission] = param->param2;
 	files.doc[ind].count_permission++;
-		
 	result = 0;
 	return ((int *) &result);
 }

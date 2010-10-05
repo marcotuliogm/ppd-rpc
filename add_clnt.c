@@ -5,6 +5,7 @@
 #include <rpc/rpc.h>
 #include "defines.h"
 #include "addit.h"
+#include <time.h>
 
 #define SERVER "127.0.0.1"
 #define MENU_STR_SIZE 30
@@ -59,7 +60,8 @@ int criar_nota()
 	char conf[10];
 	int grv_note;
 	int nro_nota;
-	
+
+
 	nota->num_note = *createnewnote_1(&open_file, cl_docs);
 	nota->num_file = open_file;
 
@@ -77,9 +79,72 @@ int criar_nota()
 
 }
 
+int edit_note()
+{
+	note *nota = (note *) malloc(sizeof(note));;	
+	intret *param = (intret *) malloc(sizeof(intret));
+	char conf[10];
+	int grv_note;
+	int nro_nota;
 
+	printf("Informe o ID da nota.");
+	scanf("%d", &param->param2);
+	param->param1 = open_file;
 
+	nota = getnote_1(param, cl_docs);
 
+	if (nota->estou_em_uso){
+		printf("******** Nota em uso *********\n\r");		
+		return 0;
+	}
+
+	printf("\n\r %d-%s \n\r %s \n\r",
+			param->param2,
+			nota->title,
+			nota->conteudo
+	);
+
+	printf("-------------------------------------------\n\r");
+
+	nota->user_edit = user;
+	nota->num_file = open_file;
+
+	printf("Titulo: ");
+	getchar();
+	scanf("%[0-9 A-Z a-z]", nota->title);
+
+	printf("Conteudo: ");
+	getchar();
+	scanf("%[0-9 A-Z a-z]", nota->conteudo);
+	nota->user_edit = user;
+	nota->estou_em_uso = 0;
+	nota->num_file=open_file;
+	nota->num_note=param->param2;
+
+	return *savenote_1(nota, cl_docs);
+}
+
+int show_note(){
+	note *nota = (note *) malloc(sizeof(note));;	
+	intret *param = (intret *) malloc(sizeof(intret));
+	char conf[10];
+	int grv_note;
+	int nro_nota;
+
+	printf("Informe o ID da nota.");
+	scanf("%d", &param->param2);
+	param->param1 = open_file;
+
+	nota = getnote_1(param, cl_docs);
+
+	printf("\n\r%s%d-%s \n\r %s \n\r",
+			nota->estou_em_uso ? "*" : " ",
+			nota->num_note,
+			nota->title,
+			nota->conteudo
+	);
+
+}
 
 int add_new_file(){	//ret 1 se ok e 0 se erro.
 
@@ -87,19 +152,12 @@ int add_new_file(){	//ret 1 se ok e 0 se erro.
 	int num_fl;
 	char cf[5];
 
-/*
-	if (!(cl_docs = clnt_create(SERVER, DOCS, DOCUMENTS_MANAGER,"tcp"))) { 
-        	clnt_pcreateerror(SERVER); 
-        	return ERR_NOT_CONNECTED; 
-    	}
-*/
-
 	num_fl = *reqnewfile_1(&user, cl_docs);
 
 	printf("Informe o Titulo: ");
 	getchar();
 	scanf("%[0-9 A-Z a-z]", fl->title);
-	printf("------------------------------------------------------------------------------------------\n");
+	printf("--------------------------------------------------------\n");
 	printf("Conteudo: \n");
 	getchar();
 	scanf("%[0-9 A-Z a-z]", fl->conteudo_inicial);
@@ -135,7 +193,7 @@ int show_users(){
 	st_account = showusers_1(&i, cl_docs);	
 	printf("\n\r------ Lista de usuarios ------\n\r");
 	for (i=0; i<st_account->max_users; i++){
-		printf("%d %s\n\r", i+1, st_account->user[i].login);
+		printf("%d %s\n\r", i, st_account->user[i].login);
 	};
 	printf("---- FIM Lista de usuarios ----\n\r\n\r");
 }
@@ -151,7 +209,6 @@ int open_document(){
 		scanf("%d", &param->param1);
 		per = *checkper_1(param, cl_docs); //erro unary *
 		printf("permissao %d\n\r", per);
-		per = 1;
 	}while(!per);
 	open_file = param->param1;
 	return 0;
@@ -161,34 +218,42 @@ void associar_usuario(){
 	int ret;
 	intret *param = (intret *) malloc(sizeof(intret));
 	show_users();
-		printf("Informe o ID do usuario.");
-		scanf("%d", &param->param2);
-	// verificar se usuario existe
+	printf("Informe o ID do usuario.");
+	scanf("%d", &param->param2);
 	param->param1 = open_file;
-	ret = *setpermission_1(param, cl_docs);	
+	ret = *setpermission_1(param, cl_docs);
+	printf("retorno da funcao %d\n\r", ret);
 }
 
 void show_properties(){
+	char buff[30];
 	file *document = (file *) malloc(sizeof(file));
 	document = getdocument_1(&open_file, cl_docs);
 	printf("Titulo: %s\n\r", document->title);
-	printf("Data:   %s\n\r", document->date );
-	printf("Hora:   %s \n\r", document->hour );
+	printf("--------------------------------------------------------\n");
+   	strftime(buff, 30, "%c", localtime(&document->date_time));
+	printf("Time:   %s\n\r",  buff);
 	printf("Usuarios com permissao: %d\n\r", document->count_permission);
 	printf("Resumo: %s\n\r", document->conteudo_inicial);
 }
 
 void show_document(){
 	int i;
+	char buff[30];
+	time_t temp;
 	file *document = (file *) malloc(sizeof(file));
 	document = getdocument_1(&open_file, cl_docs);
 	printf("Titulo: %s\n\r", document->title);
-	printf("Data:   %s\n\r", document->date );
-	printf("Hora:   %s \n\r", document->hour );
+	printf("--------------------------------------------------------\n");
+
+   	temp = document->date_time;
+   	strftime(buff, 30, "%c", localtime(&temp));
 	printf("Usuarios com permissao: %d\n\r", document->count_permission);
 	printf("Resumo: %s\n\r", document->conteudo_inicial);
 	for (i=0; i<document->tam_note; i++){
-		printf("\n\r %s \n\r %s \n\r", 
+		printf("\n\r%s %d-%s \n\r %s \n\r",
+					document->notes[i].estou_em_uso ? "*" : " ",
+					i,
 					document->notes[i].title,
 					document->notes[i].conteudo
 					);
@@ -211,7 +276,6 @@ void show_menu_docs(){
 		scanf("%d", &option);
 		switch (option){
 			case ITEM1:
-					show_users();
 					associar_usuario();
 					break;
 			case ITEM2:
@@ -221,8 +285,10 @@ void show_menu_docs(){
 					criar_nota();
 					break;
 			case ITEM4:
+					edit_note();
 					break;
 			case ITEM5:
+					show_note();
 					break;
 			case ITEM6:
 					show_document();

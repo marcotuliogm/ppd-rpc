@@ -40,9 +40,8 @@ struct note{
 
 struct file{
 	text_t	title;
-	text_t	date;
-	text_t	hour;
 	note notes[100];
+	unsigned long int date_time;
 	int tam_note;
 	int permissoes[100];
 	int count_permission;
@@ -58,7 +57,7 @@ struct Files{
 program DOCS {                /* value to register the program */
     version DOCUMENTS_MANAGER {            /* version must be assigned a value */
         int ADD_ARGS(record) = 1;  /* this is the service function */
-		int NOTAUSO(int) = 2;
+		note GETNOTE(intret) = 2;
 		file ARQEDIT(int) = 3;
 		int SAVENOTE(note) = 4;
 		int REQNEWFILE(int) = 5;
