@@ -53,18 +53,21 @@ int *savenote_1_svc(note *nota, struct svc_req *clnt){
 int *reqnewfile_1_svc(int *user, struct svc_req *clnt){
 	static int file_index;
 	char buff[80];
-//	struct tm *jn;
-//	time_t th;
+	struct tm *jn;
+	time_t th;
 
 	file_index = files.max_files;
 	printf("User %d request new file\n\r", *user);
-//	th = time(NULL);
-//	jn = localtime(&th);
+	th = time(NULL);
+	jn = localtime(&th);
 
-//    	strftime(files.doc[file_index].hour, 100, "%T", jn);
-//  	strftime(files.doc[file_index].date, 100, "%A, %D.", jn);
-//	files.doc[file_index].date_time = time(NULL);
-	time(&files.doc[file_index].date_time);
+	files.doc[file_index].date_time.dia = jn->tm_mday;
+	files.doc[file_index].date_time.ano = jn->tm_year;
+	files.doc[file_index].date_time.mes = jn->tm_mon;	
+	files.doc[file_index].date_time.hora = jn->tm_hour;
+	files.doc[file_index].date_time.min = jn->tm_min;
+	files.doc[file_index].date_time.sec = jn->tm_sec;
+
 	files.max_files++;
 	return ((int *) &file_index);
 }
