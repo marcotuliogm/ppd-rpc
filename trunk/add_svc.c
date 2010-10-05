@@ -95,6 +95,29 @@ struct Accounts * showusers_1_svc(int *not_used, struct svc_req *clnt){
 	return (&ret);
 }
 
+int *checkper_1_svc(intret *param, struct svc_req *clnt){
+	static int per = 0 ;
+	int i;
+	printf("Documento %d, user %d\n\r", param->param1, param->param2);
+	for(i = 0; i < files.doc[param->param1].count_permission; i++){
+		printf ("Comparando user com %d\n\r", files.doc[param->param1].permissoes[i]);	
+		if(param->param2 == files.doc[param->param1].permissoes[i]){
+		per = 1;
+		}
+	}
+	return ((int *) &per);
+}
+
+int *setpermission_1_svc(intret *param, struct svc_req *clnt){
+	static int result;
+	int ind = param->param1;
+	files.doc[ind].permissoes[files.doc[ind].count_permission] = param->param2;
+	files.doc[ind].count_permission++;
+		
+	result = 0;
+	return ((int *) &result);
+}
+
 int *authentication_2_svc(account *user_account, struct svc_req *clnt){
 	static int result;
 	char line[80];
