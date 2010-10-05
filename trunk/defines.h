@@ -44,9 +44,9 @@ static ITENS MENU_DOCS[] =
 {
     { ITEM1        , "* Associar usuario ao documento"},
     { ITEM2        , "* Propriedades do documentos   "},
-    { ITEM3        , "Criar uma nota               "},
-    { ITEM4        , "Editar nota                  "},
-    { ITEM5        , "Exibir nota                  "},
+    { ITEM3        , "* Criar uma nota               "},
+    { ITEM4        , "* Editar nota                  "},
+    { ITEM5        , "* Exibir nota                  "},
     { ITEM6        , "* Exibir Documento             "},
     { ITEM7        , "* Voltar					   "},
     { ITEM8        , NULL},
