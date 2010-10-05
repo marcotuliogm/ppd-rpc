@@ -38,10 +38,19 @@ struct note{
 };
 
 
+struct data{
+	int dia;
+	int mes;
+	int ano;
+	int hora;
+	int min;
+	int sec;
+};
+
 struct file{
 	text_t	title;
 	note notes[100];
-	unsigned long int date_time;
+	data date_time;
 	int tam_note;
 	int permissoes[100];
 	int count_permission;

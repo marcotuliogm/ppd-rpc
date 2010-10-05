@@ -187,6 +187,60 @@ int show_my_docs(){
 
 }
 
+int show_search(){
+	Files *st_files = NULL;
+	struct tm *jn, *tmfile;
+	time_t th, timet;
+//	th = time(NULL);
+//	jn = localtime(&th);
+	int i;
+
+	printf("Digite o dia: ");
+	scanf("%2d", &jn->tm_mday);
+	printf("Digite o mes: ");
+	scanf("%2d", &jn->tm_mon);
+	printf("Digite o ano: ");
+	scanf("%2d", &jn->tm_year); 
+	printf("Digite a hora: ");
+	scanf("%2d", &jn->tm_hour);
+	printf("Digite o min: ");
+	scanf("%2d", &jn->tm_min);
+	printf("Digite o segundo: ");
+	scanf("%2d", &jn->tm_sec);
+	printf("\n\r%2d%2d%2d%2d%2d%2d\n\r", jn->tm_mday,
+	                            jn->tm_year,
+	                            jn->tm_mon, 
+	                            jn->tm_hour,
+	                            jn->tm_min,
+	                            jn->tm_sec);
+	
+	th  = mktime(jn);
+	st_files = showdocspermission_1(&user, cl_docs);
+
+	printf("\n\r------ Lista de Documentos ------\n\r");
+	if (st_files != NULL){
+		printf("Numero de documentos %d\n\r", st_files->max_files);
+		printf("NUM | Titulo \n\r");
+		printf("--------------------------------------\n");
+		for (i=0; i<st_files->max_files; i++){
+//			if(st_files->doc[i].
+			tmfile->tm_mday = st_files->doc[i].date_time.dia;
+	        tmfile->tm_year = st_files->doc[i].date_time.ano;
+	        tmfile->tm_mon = st_files->doc[i].date_time.mes; 
+	        tmfile->tm_hour = st_files->doc[i].date_time.hora;
+	        tmfile->tm_min = st_files->doc[i].date_time.min;
+	        tmfile->tm_sec = st_files->doc[i].date_time.sec;
+			timet = mktime(jn);
+			if (timet < th){
+				printf("%-3d | %s\n\r", st_files->doc[i].num_link, st_files->doc[i].title);
+			}
+		};
+	}
+	printf("---- FIM Lista de Documentos ----\n\r\n\r");
+
+}
+
+
 int show_users(){
 	Accounts *st_account = NULL;
 	int i;
@@ -226,28 +280,28 @@ void associar_usuario(){
 }
 
 void show_properties(){
-	char buff[30];
+//	char buff[30];
 	file *document = (file *) malloc(sizeof(file));
 	document = getdocument_1(&open_file, cl_docs);
 	printf("Titulo: %s\n\r", document->title);
 	printf("--------------------------------------------------------\n");
-   	strftime(buff, 30, "%c", localtime(&document->date_time));
-	printf("Time:   %s\n\r",  buff);
+//   	strftime(buff, 30, "%c", localtime(&document->date_time));
+//	printf("Time:   %s\n\r",  buff);
 	printf("Usuarios com permissao: %d\n\r", document->count_permission);
 	printf("Resumo: %s\n\r", document->conteudo_inicial);
 }
 
 void show_document(){
 	int i;
-	char buff[30];
-	time_t temp;
+//	char buff[30];
+//	time_t temp;
 	file *document = (file *) malloc(sizeof(file));
 	document = getdocument_1(&open_file, cl_docs);
 	printf("Titulo: %s\n\r", document->title);
 	printf("--------------------------------------------------------\n");
 
-   	temp = document->date_time;
-   	strftime(buff, 30, "%c", localtime(&temp));
+  // 	temp = document->date_time;
+//   	strftime(buff, 30, "%c", localtime(&temp));
 	printf("Usuarios com permissao: %d\n\r", document->count_permission);
 	printf("Resumo: %s\n\r", document->conteudo_inicial);
 	for (i=0; i<document->tam_note; i++){
@@ -339,10 +393,9 @@ main(int argc, char *argv[]) {
 					break;
 			case ITEM3:
 					show_my_docs();
-					printf("Pressione uma tecla para continuar\n\r");
 					break;
 			case ITEM4:
-//					show_search();
+					show_search();
 					break;
 			case ITEM5:
 					printf("Show Users\n\r");
