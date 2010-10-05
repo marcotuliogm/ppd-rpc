@@ -173,12 +173,12 @@ int add_new_file(){	//ret 1 se ok e 0 se erro.
 int show_my_docs(){
 	Files *st_files = NULL;
 	int i;
-	printf("Teste\n\r");
 	st_files = showdocspermission_1(&user, cl_docs);
 	printf("\n\r------ Lista de Documentos ------\n\r");
 	if (st_files != NULL){
 		printf("Numero de documentos %d\n\r", st_files->max_files);
 		printf("NUM | Titulo \n\r");
+		printf("--------------------------------------\n");
 		for (i=0; i<st_files->max_files; i++){
 			printf("%-3d | %s\n\r", st_files->doc[i].num_link, st_files->doc[i].title);
 		};
@@ -340,8 +340,6 @@ main(int argc, char *argv[]) {
 			case ITEM3:
 					show_my_docs();
 					printf("Pressione uma tecla para continuar\n\r");
-//					scanf("%d", &option);
-					getchar();					
 					break;
 			case ITEM4:
 //					show_search();
