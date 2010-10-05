@@ -30,9 +30,10 @@ struct Accounts{
 
 struct note{
 	text_t	title;
-	text_t	user_edit;
+	int	user_edit;
 	data_t conteudo;
-	int num_link;
+	int num_file;
+	int num_note;
 	int estou_em_uso;
 };
 
@@ -67,6 +68,7 @@ program DOCS {                /* value to register the program */
 		int CHECKPER(intret) = 9;
 		int SETPERMISSION(intret) = 10;
 		file GETDOCUMENT(int) = 11;
+		int CREATENEWNOTE(int) = 12;
     } = 1;                          /* version value */
 	version ACCOUNT_MANAGER {			/* Service for authentications*/
 		int AUTHENTICATION(account) = 1;

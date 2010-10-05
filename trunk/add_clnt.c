@@ -51,57 +51,30 @@ int auth(){
 	return 0;
 }
 
-int criar_nota(int num_fl, account *usr)
+int criar_nota()
 {
 	data_t	nt_add;
 	file *fp = (file *) malloc(sizeof(file));
-	note *nota;	
+	note *nota = (note *) malloc(sizeof(note));;	
 	char conf[10];
 	int grv_note;
 	int nro_nota;
+	
+	nota->num_note = *createnewnote_1(&open_file, cl_docs);
+	nota->num_file = open_file;
 
-/*
-	CLIENT *cl_auth;
-	if (!(cl_auth = clnt_create(SERVER, DOCS, DOCUMENTS_MANAGER,"tcp"))) { 
-        	clnt_pcreateerror(SERVER); 
-        	return ERR_NOT_CONNECTED; 
-    	}
-*/
-
-
-	fp = arqedit_1(&num_fl, cl_docs); //
-
-	//em uso.
-	nro_nota = *notauso_1(&num_fl, cl_docs);
-
-	printf("Arquivo de edicao: %s.\n", fp->title);
-	printf("Ultima alteracao: %s -  %s\n", fp->date, fp->hour);
-
-	nota->num_link = num_fl;
-
-	while(1){
-		strcpy(conf, "no"); //confirma��o de envio.
-		//parametros nota.
 		printf("Titulo: ");
-		scanf(nota->title, "&s");
-		strcpy(nota->user_edit, usr->login);
-		nota->estou_em_uso = 0;	//0 porque � cria��o, ou seja, inicializa��o.
+		getchar();
+		scanf("%[0-9 A-Z a-z]", nota->title);
 
 		printf("Conteudo: ");
-		scanf(nt_add, "&s");
+		getchar();
+		scanf("%[0-9 A-Z a-z]", nota->conteudo);
+		nota->user_edit = user;
+		nota->estou_em_uso = 0;
+	
+	return *savenote_1(nota, cl_docs);
 
-		strcpy(nota->conteudo, nt_add);	//grava nota.
-
-		printf("Confirmar nota: <yes,no>\n");
-		scanf(conf, "&s");
-
-		if(strcmp(conf,"yes")!=0) continue;
-
-		//senao grava dados.
-			//request_gravar_nota;
-			//nota, arquivo, ind_nota return true
-		savenote_1(nota, cl_docs);
-	}
 }
 
 
@@ -125,11 +98,11 @@ int add_new_file(){	//ret 1 se ok e 0 se erro.
 
 	printf("Informe o Titulo: ");
 	getchar();
-	scanf("%[A-Z a-z]", fl->title);
+	scanf("%[0-9 A-Z a-z]", fl->title);
 	printf("------------------------------------------------------------------------------------------\n");
 	printf("Conteudo: \n");
 	getchar();
-	scanf("%[A-Z a-z]", fl->conteudo_inicial);
+	scanf("%[0-9 A-Z a-z]", fl->conteudo_inicial);
 
 	fl->tam_note = 0;
 	fl->num_link = num_fl;
@@ -245,6 +218,7 @@ void show_menu_docs(){
 					show_properties(); //open_doc global
 					break;
 			case ITEM3:
+					criar_nota();
 					break;
 			case ITEM4:
 					break;
