@@ -13,6 +13,7 @@
 CLIENT *cl_docs = NULL;
 file *file_open;	//id do documento aberto...
 account *usr_now;
+
 int user = ERR_NOT_AUTHENTICATED;
 int open_file = ERR_NOT_EXIST;
 
@@ -155,7 +156,6 @@ int show_my_docs(){
 
 }
 
-
 int show_users(){
 	Accounts *st_account = NULL;
 	int i;
@@ -167,29 +167,33 @@ int show_users(){
 	printf("---- FIM Lista de usuarios ----\n\r\n\r");
 }
 
-
 int open_document(){
-	
 	int per, id;
-//	per = *showdocspermission_1(user, cl_docs);
+	per = 0;
+	intret *param = (intret *) malloc(sizeof(intret));
+	param->param2 = user;
+	show_my_docs();
 	do{
 		printf("Informe o ID do documento.");
-		scanf("%d", &id);
-	}while(id>=per);
-
-	file_open = arqedit_1(&id, cl_docs);
-	
-	return 1;
+		scanf("%d", &param->param1);
+		per = *checkper_1(param, cl_docs); //erro unary *
+		printf("permissao %d\n\r", per);
+		per = 1;
+	}while(!per);
+	open_file = param->param1;
+	return 0;
 }
 
-void associar_usuario(int usr_add){
-	file_open->permissoes[file_open->count_permission] = usr_add;
-	file_open->count_permission++;
-
-	*createnewfile_1(file_open, cl_docs); //apesar de estar create, se fosse implementar uma função ia ficar igual, so.
+void associar_usuario(){
+	int ret;
+	intret *param = (intret *) malloc(sizeof(intret));
+	show_users();
+		printf("Informe o ID do usuario.");
+		scanf("%d", &param->param2);
+	// verificar se usuario existe
+	param->param1 = open_file;
+	ret = *setpermission_1(param, cl_docs);	
 }
-
-
 
 void show_menu_docs(){
 	int volta = 0,
@@ -208,9 +212,7 @@ void show_menu_docs(){
 		switch (option){
 			case ITEM1:
 					show_users();
-					printf("Informe o ID do usuario: ");					
-					scanf("%d", &usr_add);
-					associar_usuario(usr_add);
+					associar_usuario();
 					break;
 			case ITEM2:
 //					show_propriedades(); //open_doc global

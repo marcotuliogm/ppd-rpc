@@ -6,6 +6,11 @@ int first_num;      /* value or a structure of values */
 int second_num;     /* first_num and second_num are addends */
 };
 
+struct intret {
+	int param1;
+	int param2;
+};
+
 #define MAX_NR 1000
 
 typedef char text_t[30];
@@ -59,6 +64,8 @@ program DOCS {                /* value to register the program */
 		int CREATENEWFILE(file) = 6;
 		Accounts SHOWUSERS(int) = 7;
 		Files SHOWDOCSPERMISSION(int) = 8;
+		int CHECKPER(intret) = 9;
+		int SETPERMISSION(intret) = 10;
     } = 1;                          /* version value */
 	version ACCOUNT_MANAGER {			/* Service for authentications*/
 		int AUTHENTICATION(account) = 1;
