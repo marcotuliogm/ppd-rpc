@@ -66,6 +66,7 @@ program DOCS {                /* value to register the program */
 		Files SHOWDOCSPERMISSION(int) = 8;
 		int CHECKPER(intret) = 9;
 		int SETPERMISSION(intret) = 10;
+		file GETDOCUMENT(int) = 11;
     } = 1;                          /* version value */
 	version ACCOUNT_MANAGER {			/* Service for authentications*/
 		int AUTHENTICATION(account) = 1;

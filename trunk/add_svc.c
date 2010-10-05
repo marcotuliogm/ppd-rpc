@@ -118,6 +118,14 @@ int *setpermission_1_svc(intret *param, struct svc_req *clnt){
 	return ((int *) &result);
 }
 
+struct file * getdocument_1_svc(int *document, struct svc_req *clnt){
+	static file ret;
+	ret = files.doc[*document];
+	printf("Return file\n\r");
+//	return (&accounts);	//criar logica de confimação, DEPOIS
+	return (&ret);
+}
+
 int *authentication_2_svc(account *user_account, struct svc_req *clnt){
 	static int result;
 	char line[80];
