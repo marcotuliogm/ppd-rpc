@@ -32,8 +32,8 @@ typedef struct
 static ITENS MENU[] =
 {
     { ITEM1        , "* Criar Documento					"},
-    { ITEM2        , "Abri Documento					"},
-    { ITEM3        , "Meus documentos					"},
+    { ITEM2        , "* Abri Documento					"},
+    { ITEM3        , "* Meus documentos					"},
     { ITEM4        , "Documentos alterados por data/hora"},
     { ITEM5        , "* Listar Usuarios					"},
     { ITEM6        , "* Exit								"},
@@ -42,12 +42,12 @@ static ITENS MENU[] =
 
 static ITENS MENU_DOCS[] =
 {
-    { ITEM1        , "Associar usuario ao documento"},
-    { ITEM2        , "Propriedades do documentos   "},
+    { ITEM1        , "* Associar usuario ao documento"},
+    { ITEM2        , "* Propriedades do documentos   "},
     { ITEM3        , "Criar uma nota               "},
     { ITEM4        , "Editar nota                  "},
     { ITEM5        , "Exibir nota                  "},
-    { ITEM6        , "Exibir Documento             "},
+    { ITEM6        , "* Exibir Documento             "},
     { ITEM7        , "* Voltar					   "},
     { ITEM8        , NULL},
 };

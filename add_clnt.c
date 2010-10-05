@@ -195,6 +195,33 @@ void associar_usuario(){
 	ret = *setpermission_1(param, cl_docs);	
 }
 
+void show_properties(){
+	file *document = (file *) malloc(sizeof(file));
+	document = getdocument_1(&open_file, cl_docs);
+	printf("Titulo: %s\n\r", document->title);
+	printf("Data:   %s\n\r", document->date );
+	printf("Hora:   %s \n\r", document->hour );
+	printf("Usuarios com permissao: %d\n\r", document->count_permission);
+	printf("Resumo: %s\n\r", document->conteudo_inicial);
+}
+
+void show_document(){
+	int i;
+	file *document = (file *) malloc(sizeof(file));
+	document = getdocument_1(&open_file, cl_docs);
+	printf("Titulo: %s\n\r", document->title);
+	printf("Data:   %s\n\r", document->date );
+	printf("Hora:   %s \n\r", document->hour );
+	printf("Usuarios com permissao: %d\n\r", document->count_permission);
+	printf("Resumo: %s\n\r", document->conteudo_inicial);
+	for (i=0; i<document->tam_note; i++){
+		printf("\n\r %s \n\r %s \n\r", 
+					document->notes[i].title,
+					document->notes[i].conteudo
+					);
+	}
+}
+
 void show_menu_docs(){
 	int volta = 0,
 		option,
@@ -215,7 +242,7 @@ void show_menu_docs(){
 					associar_usuario();
 					break;
 			case ITEM2:
-//					show_propriedades(); //open_doc global
+					show_properties(); //open_doc global
 					break;
 			case ITEM3:
 					break;
@@ -224,6 +251,7 @@ void show_menu_docs(){
 			case ITEM5:
 					break;
 			case ITEM6:
+					show_document();
 					break;
 			case ITEM7:
 					volta = 1;
