@@ -39,9 +39,8 @@ struct file * arqedit_1_svc(int *num_fl,  struct svc_req *clnt){
 }
 
 int *savenote_1_svc(note *nota, struct svc_req *clnt){
-	int tam = files.doc[nota->num_link].tam_note;
-	files.doc[nota->num_link].notes[tam] = *nota;
-	 return ((int *) &nota->num_link);	//criar logica de confimação, DEPOIS
+	files.doc[nota->num_file].notes[nota->num_note] = *nota;
+	return ((int *) &nota->num_file);	//criar logica de confimação, DEPOIS
 }
 
 
@@ -125,6 +124,16 @@ struct file * getdocument_1_svc(int *document, struct svc_req *clnt){
 //	return (&accounts);	//criar logica de confimação, DEPOIS
 	return (&ret);
 }
+
+int * createnewnote_1_svc(int *document, struct svc_req *clnt){
+	static int ret;
+	ret = files.doc[*document].tam_note;
+	files.doc[*document].notes[ret].estou_em_uso = 1;
+	files.doc[*document].tam_note++;
+	printf("Return new note\n\r");
+	return ((int *) &ret);
+}
+
 
 int *authentication_2_svc(account *user_account, struct svc_req *clnt){
 	static int result;
