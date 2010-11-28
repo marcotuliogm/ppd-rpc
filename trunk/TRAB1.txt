@@ -1,0 +1,60 @@
+/* TRABALHO DE PPD 1 */
+
+
+servidor:
+	open_file -abre arquivos com usuarios cadastrados
+	busca_usuario -lista usuarios 
+	autenticacao_usuario - liberar acesso
+	
+
+serv_usuario:
+	criar_arquivos
+	chmod_arquivos
+		add_user_arquivo(usuario, arquivo)
+	add_nota(arquivo, nota)
+	editar_nota
+
+str_usuario:
+	nome
+	id
+	senha
+	arquivos_user[x]
+	
+
+
+str_file:
+	titulo
+	data
+	hora
+	notas[]
+	permissoes[]
+
+str_nota:
+	titulo
+	conteudo
+	estou_em_uso return error
+
+cliente:
+	listar_users
+	new_file
+	chmod_arquivo
+	listar_my_docs
+	listar_my_docs_pos_data
+	exibir_detalhes
+	criar_nota(documento)
+	editar_nota(file and nota)
+	listar_nota(arquivo nota)
+	listar_all_note(arquivo)
+
+	
+	
+
+
+
+
+
+
+
+	
+	
+	

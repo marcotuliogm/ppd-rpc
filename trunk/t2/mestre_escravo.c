@@ -83,7 +83,7 @@ int main(int argc,char **argv)
 	 if (nchunks > 0)
 	   {
 	    nchunks --;   
-            printf("MASTER: Sending chunk %d to worker %d\n",-(nchunks - 20),status.MPI_SOURCE);
+            printf("MASTER: Sending chunk	 %d to worker %d\n",-(nchunks - 20),status.MPI_SOURCE);
 	    fflush(stdout);
 	 
 	    MPI_Send(&index, 1, MPI_INT, status.MPI_SOURCE, indexmsg, MPI_COMM_WORLD);	           
