@@ -122,7 +122,7 @@ int main(int argc,char **argv)
 			MPI_Recv(&index, 1, MPI_INT, MPI_ANY_SOURCE, indexmsg, MPI_COMM_WORLD, &status);
 	        MPI_Recv(&result[index/4], chunksize, MPI_INT, MPI_ANY_SOURCE, arraymsg, MPI_COMM_WORLD, &status);
 		 	if (nchunks > 0) {
-				printf("%d - %08lX %08lX\n", status.MPI_SOURCE, result[index/4], result[(index/4)+1]);
+				printf("work %d index %d - %08lX %08lX\n", status.MPI_SOURCE, index, result[index/4], result[(index/4)+1]);
 //			    printf("MASTER: Receiving from worker %d, remaining %d nchunks\n",status.MPI_SOURCE,nchunks);
 			    fflush(stdout);
 			}
@@ -178,7 +178,7 @@ if (taskid > MASTER) {
 	   {
 
 		MPI_Recv(&data[0], chunksize, MPI_INT, source, arraymsg, MPI_COMM_WORLD, &status);
-	   	printf("worker %d encoding %8s\n\r", taskid, data);
+		printf("worker %d index %d encoding %8s\n\r", taskid, index, data);
 		fflush(stdout);
 	  	L = data[0]<<24 | data[1]<<16 | data[2]<<8 | data[3];
 		R = data[4]<<24 | data[5]<<16 | data[6]<<8 | data[7];
