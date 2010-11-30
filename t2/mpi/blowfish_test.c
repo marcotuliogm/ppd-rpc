@@ -86,13 +86,13 @@ int main(int argc,char **argv)
 			} while (vet[i-1] != EOF);
 			size = i-2;
 			fclose (pFile);
-			printf ("The file contains %d characters.\n", size);
+//			printf ("The file contains %d characters.\n", size);
 		}
 //		printf("%08lX %08lX\n", vet[0], vet[4]);
 
 		/* adjust size */
 		if (size%8){
-			printf("Não é exata %d\n\r", size%8);
+//			printf("Não é exata %d\n\r", size%8);
 			for (i = size; i < size+(8-size%8); i++){
 				vet[i] = ' ';
 			}
