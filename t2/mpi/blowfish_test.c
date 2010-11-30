@@ -176,7 +176,7 @@ if (taskid > MASTER) {
        //fflush(stdout);
        if (index != FIM)
 	   {
-	   	printf("worker %d encoding %8s\n\r", taskid, index)
+	   	printf("worker %d encoding %8s\n\r", taskid, index);
 		fflush(stdout);
 
 		MPI_Recv(&data[0], chunksize, MPI_INT, source, arraymsg, MPI_COMM_WORLD, &status);
