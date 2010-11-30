@@ -38,7 +38,7 @@ int main(int argc,char **argv)
 	BLOWFISH_CTX ctx;
 
 /* MPI variables */
-	
+    double startwtime, endwtime;
 	int	ntasks,           /* total number of MPI tasks in partitiion */
 		nworkers,         /* number of worker tasks */
 		nchunks,
@@ -54,6 +54,7 @@ int main(int argc,char **argv)
 		source;           /* origin task id of message */
 	 MPI_Status status;
 
+    startwtime = MPI_Wtime();
 	/* MPI init */
 	rc = MPI_Init(&argc,&argv);
 	rc|= MPI_Comm_size(MPI_COMM_WORLD,&ntasks);
@@ -205,6 +206,8 @@ if (taskid > MASTER) {
 		fprintf(pFile, "%08lx", result[i]);
 	}
 	pclose(pFile);
+	endwtime = MPI_Wtime();
+	printf("wall clock time = %f\n", endwtime-startwtime);
  	MPI_Finalize();
 }
 
