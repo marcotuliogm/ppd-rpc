@@ -46,7 +46,8 @@ int main(int argc,char **argv)
 		rc,               /* return error code */
 		dest,             /* destination task id to send message */
 		pares,
-		index;            /* index into the array */
+		index = 0 ;            /* index into the array */
+		ret_index = 0;
 	long int  i, j, chunksize, chunkretsize;  /* loop variable */
  	int arraymsg = 1,     /* setting a message type */
 		indexmsg = 2,     /* setting a message type */
@@ -119,10 +120,10 @@ int main(int argc,char **argv)
 	    // a few sample values
 
 		while (nchunks > (0 - nworkers)) {
-			MPI_Recv(&index, 1, MPI_INT, MPI_ANY_SOURCE, indexmsg, MPI_COMM_WORLD, &status);
-	        MPI_Recv(&result[index/4], chunksize, MPI_INT, MPI_ANY_SOURCE, arraymsg, MPI_COMM_WORLD, &status);
+			MPI_Recv(&ret_index, 1, MPI_INT, MPI_ANY_SOURCE, indexmsg, MPI_COMM_WORLD, &status);
+	        MPI_Recv(&result[ret_index/4], chunksize, MPI_INT, MPI_ANY_SOURCE, arraymsg, MPI_COMM_WORLD, &status);
 		 	if (nchunks > 0) {
-				printf("work %d index %d - %08lX %08lX\n", status.MPI_SOURCE, index, result[index/4], result[(index/4)+1]);
+				printf("work %d index %d ret_index %d - %08lX %08lX\n", status.MPI_SOURCE, ret_index, index, result[index/4], result[(index/4)+1]);
 //			    printf("MASTER: Receiving from worker %d, remaining %d nchunks\n",status.MPI_SOURCE,nchunks);
 			    fflush(stdout);
 			}
