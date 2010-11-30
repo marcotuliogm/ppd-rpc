@@ -98,6 +98,7 @@ int main(int argc,char **argv)
 			size = i;
 			printf ("The file contains %d characters.\n", size);
 		}
+		nchunks = size / chunksize;
 		printf("MASTER: number of workers = %d\n",nworkers);
 		printf("MASTER: number of chunks  = %d\n", nchunks);
 		fflush(stdout);
