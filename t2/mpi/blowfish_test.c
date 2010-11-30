@@ -176,10 +176,10 @@ if (taskid > MASTER) {
        //fflush(stdout);
        if (index != FIM)
 	   {
-	   	printf("worker %d encoding %8s\n\r", taskid, index);
-		fflush(stdout);
 
 		MPI_Recv(&data[0], chunksize, MPI_INT, source, arraymsg, MPI_COMM_WORLD, &status);
+	   	printf("worker %d encoding %8s\n\r", taskid, data);
+		fflush(stdout);
 	  	L = data[0]<<24 | data[1]<<16 | data[2]<<8 | data[3];
 		R = data[4]<<24 | data[5]<<16 | data[6]<<8 | data[7];
 
