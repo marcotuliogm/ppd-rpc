@@ -155,9 +155,8 @@ int main(int argc,char **argv)
 			fprintf(pFile, "%08lx", result[i]);
 		}
 		pclose(pFile);
-
-
-
+		endwtime = MPI_Wtime();
+		printf("wall clock time = %f\n", endwtime-startwtime);
 	}
 
 
@@ -206,8 +205,6 @@ if (taskid > MASTER) {
 		fprintf(pFile, "%08lx", result[i]);
 	}
 	pclose(pFile);
-	endwtime = MPI_Wtime();
-	printf("wall clock time = %f\n", endwtime-startwtime);
  	MPI_Finalize();
 }
 
