@@ -106,8 +106,8 @@ int main(int argc,char **argv)
 
      /* Send each worker task its portion of the array */
 	 	for (dest = 1; dest <= nworkers; dest++) {
-	         printf("MASTER: Sending chunk %d to worker %d\n",dest,dest);
-	         fflush(stdout);
+//	         printf("MASTER: Sending chunk %d to worker %d\n",dest,dest);
+//	         fflush(stdout);
 
 	         //MPI_Send(buffer,count,type,dest,tag,comm)
 	         MPI_Send(&index, 1, MPI_INT, dest, indexmsg, MPI_COMM_WORLD);
@@ -123,9 +123,9 @@ int main(int argc,char **argv)
 			MPI_Recv(&ret_index, 1, MPI_INT, MPI_ANY_SOURCE, indexmsg, MPI_COMM_WORLD, &status);
 	        MPI_Recv(&result[ret_index/4], chunksize, MPI_INT, MPI_ANY_SOURCE, arraymsg, MPI_COMM_WORLD, &status);
 		 	if (nchunks > 0) {
-				printf("work %d index %d ret_index %d - %08lX %08lX\n", status.MPI_SOURCE, ret_index, index, result[index/4], result[(index/4)+1]);
+//				printf("work %d index %d ret_index %d - %08lX %08lX\n", status.MPI_SOURCE, ret_index, index, result[index/4], result[(index/4)+1]);
 //			    printf("MASTER: Receiving from worker %d, remaining %d nchunks\n",status.MPI_SOURCE,nchunks);
-			    fflush(stdout);
+//			    fflush(stdout);
 			}
 			if (nchunks > 0) {
 		    	nchunks --;
@@ -134,7 +134,7 @@ int main(int argc,char **argv)
 			    MPI_Send(&index, 1, MPI_INT, status.MPI_SOURCE, indexmsg, MPI_COMM_WORLD);	           
 			    MPI_Send(&vet[index], chunksize, MPI_INT, status.MPI_SOURCE, arraymsg, MPI_COMM_WORLD);
 			    index = index + chunksize;
-			    printf ("FALTAM %d FATIAS\n", nchunks);
+//			    printf ("FALTAM %d FATIAS\n", nchunks);
 		   	}
 		 	else nchunks --;
 		}
@@ -142,8 +142,8 @@ int main(int argc,char **argv)
 	     //printf("MESTRE SAIU DO LACO\n");
 	     //fflush(stdout);
 		for (dest=1; dest<= nworkers; dest++) {
-			printf("MASTER: Sending to worker %d : END\n",dest);
-			fflush(stdout);
+//			printf("MASTER: Sending to worker %d : END\n",dest);
+//			fflush(stdout);
 			index = FIM;
 			MPI_Send(&index, 1, MPI_INT, dest, indexmsg, MPI_COMM_WORLD);
 		}
@@ -179,15 +179,15 @@ if (taskid > MASTER) {
 	   {
 
 		MPI_Recv(&data[0], chunksize, MPI_INT, source, arraymsg, MPI_COMM_WORLD, &status);
-		printf("worker %d index %d encoding %8c\n\r", taskid, index, data);
+//		printf("worker %d index %d encoding %8c\n\r", taskid, index, data);
 		fflush(stdout);
 	  	L = data[0]<<24 | data[1]<<16 | data[2]<<8 | data[3];
 		R = data[4]<<24 | data[5]<<16 | data[6]<<8 | data[7];
 
 		Blowfish_Encrypt(&ctx, &L, &R);
 
-		return_data[0]=L;
-		return_data[1]=R;
+		return_data[0] = L;
+		return_data[1] = R;
 			
 		// Send my results back to the master task 
 		dest = MASTER;
@@ -195,8 +195,8 @@ if (taskid > MASTER) {
 		MPI_Send(&return_data[0], chunkretsize, MPI_INT, MASTER, arraymsg, MPI_COMM_WORLD);
 		}
 	} 
-    printf ("WORKER %d: finalized\n",taskid);
-    fflush(stdout);
+//    printf ("WORKER %d: finalized\n",taskid);
+//    fflush(stdout);
    }
 
 	/* Write encoded file	*/
@@ -205,22 +205,6 @@ if (taskid > MASTER) {
 		fprintf(pFile, "%08lx", result[i]);
 	}
 	pclose(pFile);
-
-//	printf("%08lX %08lX\n", L, R);
-//	Blowfish_Encrypt(&ctx, &L, &R);
-//	printf("%08lX %08lX\n", L, R);
-//	if (L == 0xDF333FD2L && R == 0x30A71BB4L)
-//		printf("Test encryption OK.\n");
-//	else
-//		printf("Test encryption failed.\n");
-
-
-//	Blowfish_Decrypt(&ctx, &L, &R);
-//	if (L == 1 && R == 2)
-//		printf("Test decryption OK.\n");
-//	else
-//		printf("Test decryption failed.\n");
-//	printf("%08lX %08lX\n", L, R);
- MPI_Finalize();
+ 	MPI_Finalize();
 }
 
