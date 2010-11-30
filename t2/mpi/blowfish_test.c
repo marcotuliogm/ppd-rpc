@@ -25,7 +25,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #define MASTER 0         /* taskid of first process */
 #define FIM -999
 
-void main(void)
+int main(int argc,char **argv)
 {
 	unsigned char key[] = "TESTKEY";
 	unsigned long L = 0, R = 0;
@@ -215,5 +215,6 @@ if (taskid > MASTER) {
 //	else
 //		printf("Test decryption failed.\n");
 //	printf("%08lX %08lX\n", L, R);
+ MPI_Finalize();
 }
 
