@@ -46,7 +46,7 @@ int main(int argc,char **argv)
 		rc,               /* return error code */
 		dest,             /* destination task id to send message */
 		pares,
-		index = 0 ;            /* index into the array */
+		index = 0,            /* index into the array */
 		ret_index = 0;
 	long int  i, j, chunksize, chunkretsize;  /* loop variable */
  	int arraymsg = 1,     /* setting a message type */
@@ -179,7 +179,7 @@ if (taskid > MASTER) {
 	   {
 
 		MPI_Recv(&data[0], chunksize, MPI_INT, source, arraymsg, MPI_COMM_WORLD, &status);
-		printf("worker %d index %d encoding %8s\n\r", taskid, index, data);
+		printf("worker %d index %d encoding %8c\n\r", taskid, index, data);
 		fflush(stdout);
 	  	L = data[0]<<24 | data[1]<<16 | data[2]<<8 | data[3];
 		R = data[4]<<24 | data[5]<<16 | data[6]<<8 | data[7];
