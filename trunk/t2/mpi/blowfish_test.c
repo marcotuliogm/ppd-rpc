@@ -54,7 +54,6 @@ int main(int argc,char **argv)
 		source;           /* origin task id of message */
 	 MPI_Status status;
 
-    startwtime = MPI_Wtime();
 	/* MPI init */
 	rc = MPI_Init(&argc,&argv);
 	rc|= MPI_Comm_size(MPI_COMM_WORLD,&ntasks);
@@ -68,6 +67,7 @@ int main(int argc,char **argv)
 	chunksize = 8;
 	chunkretsize = 2;
 
+    startwtime = MPI_Wtime();
 	
 	/* Blowfish init in all workers*/
 
